@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "userinit.h": "c",
+        "led.h": "c",
+        "string.h": "c",
+        "status.h": "c",
+        "mlytask.h": "c",
+        "mycan.h": "c",
+        "can_pal1.h": "c",
+        "pins_driver.h": "c",
+        "myadc.h": "c",
+        "can_pal.h": "c",
+        "uart_pal1.h": "c",
+        "adc_driver.h": "c",
+        "clockman1.h": "c",
+        "pin_mux.h": "c",
+        "cpu.h": "c",
+        "osif.h": "c",
+        "bits_button.h": "c",
+        "liuyunspi.h": "c",
+        "spi_pal.h": "c",
+        "s32k148.h": "c",
+        "key.h": "c",
+        "liuyunlpspi2.h": "c",
+        "liuyunad7689.h": "c"
+    }
+}

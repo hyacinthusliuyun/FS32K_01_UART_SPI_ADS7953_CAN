@@ -1,0 +1,2 @@
+com.freescale.s32ds.cross.sdk.support.attachedSDKs=FreeMaster_S32xx_2.0.0_PATH|Debug_FLASH|Release_FLASH|Debug_RAM|Release_RAM\:S32K148_SDK_3.0.0_PATH|Debug_FLASH|Release_FLASH|Debug_RAM|Release_RAM\:S32K14x_AMMCLIB_1.1.18_PATH|Debug_FLASH|Release_FLASH|Debug_RAM|Release_RAM
+eclipse.preferences.version=1
