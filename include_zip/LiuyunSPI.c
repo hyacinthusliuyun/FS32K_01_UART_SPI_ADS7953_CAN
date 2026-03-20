@@ -1,5 +1,5 @@
 /* LiuyunSPI.c  —— 手动轮扫 16 通道，TI ADS7953 Manual Mode */
-//GB2312----GB2312----GB2312----GB2312----GB2312----GB2312----GB2312----GB2312----GB2312----GB2312----
+//GB2312
 #include "LiuyunSPI.h"
 #include "spi_pal.h"
 #include "osif.h"
@@ -101,7 +101,7 @@ void ADS7953_ScanAll_Auto1Mode(uint8_t pcsIdx)
 void ADS7953_Scan(void)
 {
     // ADS7953_ScanAll_Manual(PCS_ADS7953);
-    // MLY_UART1_SEND("MLY_DEBUG_spi2 ADS7953 Manual\r\n");
+    // MLY_UART1_SEND("INFO:spi2 ADS7953 Manual\r\n");
     ADS7953_ScanAll_Auto1Mode(PCS_ADS7953);
-    // MLY_UART1_SEND("MLY_DEBUG_spi2 ADS7953 Auto1Mode\r\n");
+    // MLY_UART1_SEND("INFO:spi2 ADS7953 Auto1Mode\r\n");
 }

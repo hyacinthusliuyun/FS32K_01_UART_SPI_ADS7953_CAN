@@ -47,11 +47,12 @@ int main(void)
   #endif
   /*** End of Processor Expert internal initialization.                    ***/
 
-  /* Write your code here */
+  /* Write your code here */ 
   /* For example: for(;;) { } */
   USERINIT();
   while (1)
   {
+    
     MLYTASK();
     // PINS_DRV_WritePin(PTE, 10, 0);
     // SPI_SetSS(&spi2Instance, 1);

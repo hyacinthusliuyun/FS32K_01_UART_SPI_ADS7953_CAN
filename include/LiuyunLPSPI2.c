@@ -1,94 +1,125 @@
 #include "USERINIT.h"
 #include "LiuyunLPSPI2.h"
 #include "osif.h"
-uint32_t ADS7953_GetValueOrig[16] = {0};  
 
-static inline uint16_t ADS7953_ReadWrite(uint16_t cmd16)
+/* 16通道原始采样缓存（按返回tag索引） */
+uint32_t ADS7953_GetValueOrig[16] = {0};
+
+uint32_t ADS7953_SpiErrCnt = 0;
+uint32_t ADS7953_SpiOkCnt = 0;
+/* 返回tag异常计数 */
+uint32_t ADS7953_TagErrCnt = 0;
+
+/* 本轮扫描中各通道是否收到过有效tag */
+static uint8_t ADS7953_TagSeen[16] = {0};
+/* 最近一次SPI传输状态 */
+static status_t ADS7953_LastSpiStatus = STATUS_SUCCESS;
+
+/* Manual模式命令字：
+ * [15:12]=0001 Manual
+ * [10:7] = 通道号
+ * [6]    = 1（当前实现沿用原工程配置位）
+ */
+static inline uint16_t ADS7953_CmdManual(uint8_t ch)
 {
-    uint8_t tx[2] = { cmd16 >> 8, cmd16 & 0xFF };
-    uint8_t rx[2] = {0};
-    LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U,200u);
-    return ((uint16_t)rx[0] << 8) | rx[1];
+    return (uint16_t)(0x1C00U | ((uint16_t)(ch & 0x0FU) << 7) | 0x0040U);
 }
 
-static inline uint16_t SPI1_PCS0_outputTest(uint16_t cmd16)
+/* 发送1帧16bit命令并读取1帧16bit返回；成功返回1，失败返回0 */
+static uint8_t ADS7953_ReadWrite(uint16_t cmd16, uint16_t *rx16)
 {
-    uint8_t tx[2] = { cmd16 & 0xFF,cmd16 >> 8  };
+    uint8_t tx[2] = {(uint8_t)(cmd16 >> 8), (uint8_t)(cmd16 & 0xFFU)};
     uint8_t rx[2] = {0};
-    LPSPI_DRV_MasterTransferBlocking(LPSPICOM1, tx, rx, 2U,200u);
-    return ((uint16_t)rx[0] << 8) | rx[1];
+
+    ADS7953_LastSpiStatus = LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    if (ADS7953_LastSpiStatus != STATUS_SUCCESS)
+    {
+        ADS7953_SpiErrCnt++;
+        return 0U;
+    }
+
+    ADS7953_SpiOkCnt++;
+    *rx16 = (uint16_t)(((uint16_t)rx[0] << 8) | rx[1]);
+    return 1U;
 }
 
+/* 解析ADS7953返回帧：高4位tag、低12位采样值 */
+static void ADS7953_DecodeAndStore(uint16_t rx)
+{
+    //tag校验ch对应value
+    uint8_t tag = (uint8_t)((rx >> 12) & 0x0FU);
+    uint16_t value = (uint16_t)(rx & 0x0FFFU);
+
+    if (tag < 16U)
+    {
+        ADS7953_GetValueOrig[tag] = value;
+        ADS7953_TagSeen[tag] = 1U;
+    }
+    else
+    {
+        ADS7953_TagErrCnt++;
+    }
+}
+
+/* Manual模式整帧扫描：
+ * 1) 连续下发16个通道命令
+ * 2) 追加2帧flush，尽量覆盖pipeline延迟
+ * 3) 输出16通道值与缺失通道计数
+ */
 void ADS7953_ScanAll_Manual(void)
 {
-    static uint32_t prevRx = 0;
-    for (uint8_t ADS7953_Manual_NextCh = 0; ADS7953_Manual_NextCh < 16; ++ADS7953_Manual_NextCh)
+    uint16_t rx = 0U;
+    uint8_t missing = 0U;
+
+    memset(ADS7953_TagSeen, 0, sizeof(ADS7953_TagSeen));
+
+    for (uint8_t ch = 0; ch < 16U; ++ch)
     {
-        uint32_t cmd = 0x1C00 | (ADS7953_Manual_NextCh << 7) | 0x0040;
-        uint32_t rx  = ADS7953_ReadWrite(cmd);  
+        if (ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx) != 0U)
+        {
+            ADS7953_DecodeAndStore(rx);
+        }
         OSIF_TimeDelay(1);
- 
-        if (ADS7953_Manual_NextCh > 0) ADS7953_GetValueOrig[ADS7953_Manual_NextCh-1] = prevRx & 0x0FFF;
-        prevRx = rx;
-        ADS7953_GetValueOrig[ADS7953_Manual_NextCh] = rx & 0x0FFF; 
     }
 
-    for (uint8_t i = 0; i < 16; ++i)
+    for (uint8_t flush = 0; flush < 2U; ++flush)
     {
-        // MLY_UART1_SEND("ch=%d,val=%d ", i, ADS7953_GetValueOrig[i]);
+        if (ADS7953_ReadWrite(ADS7953_CmdManual(0U), &rx) != 0U)
+        {
+            ADS7953_DecodeAndStore(rx);
+        }
+        OSIF_TimeDelay(1);
+    }
+
+    for (uint8_t i = 0; i < 16U; ++i)
+    {
+        if (ADS7953_TagSeen[i] == 0U)
+        {
+            missing++;
+        }
         MLY_UART1_SEND("%d ", ADS7953_GetValueOrig[i]);
     }
-    MLY_UART1_SEND("\r\n");
+    MLY_UART1_SEND("| miss=%d spiErr=%lu\r\n", missing, ADS7953_SpiErrCnt);
 }
-void ADS7953_ScanAll_Auto1Mode(void)
-{
-    static uint32_t prevRx = 0;
-    uint32_t cmd = 0x3C40; 
-    uint32_t rx = ADS7953_ReadWrite(cmd);
-    OSIF_TimeDelay(1); 
 
-    for (uint8_t ADS7953_Auto_NextCh = 0; ADS7953_Auto_NextCh < 16; ++ADS7953_Auto_NextCh)
-    {
-        rx = ADS7953_ReadWrite(0x3840); 
-        OSIF_TimeDelay(1); 
-
-        if (ADS7953_Auto_NextCh > 0) ADS7953_GetValueOrig[ADS7953_Auto_NextCh-1] = prevRx & 0x0FFF;
-        prevRx = rx;
-        ADS7953_GetValueOrig[ADS7953_Auto_NextCh] = rx & 0x0FFF;
-    }
-    for (uint8_t i = 0; i < 16; ++i)
-    {
-        MLY_UART1_SEND("%d ", ADS7953_GetValueOrig[i]);
-    }
-    MLY_UART1_SEND("\r\n");
-}
-void ADS7953_AUTO_2_TEST(void)
+/* 单通道快速检查：用于调试时快速确认某一通道缓存是否更新 */
+void ADS7953_CheckChannel(uint8_t ch)
 {
-    uint16_t rx;
-    uint8_t  data[16] = {0};          /* 12 ��ͨ�������ÿͨ�� 1 Byte�� */
-    rx = ADS7953_ReadWrite(0x3C40);
-    MLY_UART1_SEND("F0:%02X%02X\r\n", (rx>>8)&0xFF, rx&0x0FF);
-    rx = ADS7953_ReadWrite(0x3840);
-    MLY_UART1_SEND("F1:%02X%02X\r\n", (rx>>8)&0xFF, rx&0x0FF);
-    for (uint8_t i = 0; i < 16; ++i)
+    if (ch >= 16U)
     {
-        rx = ADS7953_ReadWrite(0x3840);
-        data[i] = (rx & 0x0FFF) >> 4;
-        MLY_UART1_SEND("F%d:%02X%02X\r\n", i+2, (rx>>8)&0xFF, rx&0x0FF);
+        MLY_UART1_SEND("ADS7953 ch invalid: %d\r\n", ch);
+        return;
     }
-    MLY_UART1_SEND("Auto2=");
-    for (uint8_t i = 0; i < 16; ++i)
-    {
-        MLY_UART1_SEND("%02X", data[i]);
-    }
-    MLY_UART1_SEND("\r\n");
+
+    MLY_UART1_SEND("ADS7953_CH%d=%d tagSeen=%d spiErr=%lu\r\n",
+                   ch,
+                   ADS7953_GetValueOrig[ch],
+                   ADS7953_TagSeen[ch],
+                   ADS7953_SpiErrCnt);
 }
+
+/* 任务入口：当前固定走Manual整帧扫描 */
 void ADS7953_Scan(void)
 {
-	uint16_t r5;
-    r5 = ADS7953_ReadWrite(0x1A40) & 0x0FFF; //ADS7953���յ�1AC0��ȷ
-    // r5 = SPI1_PCS0_outputTest(0x1AC0) & 0x0FFF;
-    // r7 = ADS7953_ReadWrite(0x1BC0) & 0x0FFF;//ADS7953���յ�0x1BC0��ȷ
-    MLY_UART1_SEND("%d\r\n",r5);
+    ADS7953_ScanAll_Manual();
 }
-

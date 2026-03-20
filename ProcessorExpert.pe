@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PEproject>
   <Header>
-    <Name>FS32K_01_MIN</Name>
+    <Name>FS32K_01_UART_SPI_ADS7953_CAN</Name>
     <SavedBy>Administrator</SavedBy>
     <ModificationStamp>30</ModificationStamp>
     <Date>2025-11-27</Date>
@@ -6071,7 +6071,7 @@
         <ItemSymbol>ProjectComponentsCountChanged</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>0</Value>
+        <Value>2</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuleName_ADC</ItemSymbol>

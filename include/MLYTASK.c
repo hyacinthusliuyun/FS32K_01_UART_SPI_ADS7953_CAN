@@ -39,12 +39,12 @@ void KEY_PROC(void)
         switch (KEY_VAL)
         {
             case 1:
-            	MLY_UART1_SEND("MLY_DEBUG_ KEY 1 OK && LED1_ON\r\n");
+            	MLY_UART1_SEND("INFO: KEY 1 OK && LED1_ON\r\n");
                 LED1_FLAG=1;
                 test=1;
                 break;
             case 2:
-            	MLY_UART1_SEND("MLY_DEBUG_ KEY 2 && LED1_OF OK\r\n");
+            	MLY_UART1_SEND("INFO: KEY 2 && LED1_OF OK\r\n");
             	LED1_FLAG=2;
             	test=2;
 

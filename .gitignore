@@ -1,2 +1,20 @@
+# Build output directories
 /Debug_FLASH/
 /Release_FLASH/
+/Debug*/
+/Release*/
+/build/
+/build*/
+
+# Common embedded temporary/IDE artifacts
+*.o
+*.d
+*.elf
+*.axf
+*.map
+*.lst
+*.tmp
+
+# Keep firmware images in repo
+!*.hex
+!*.bin

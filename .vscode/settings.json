@@ -23,5 +23,6 @@
         "key.h": "c",
         "liuyunlpspi2.h": "c",
         "liuyunad7689.h": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
