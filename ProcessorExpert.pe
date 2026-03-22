@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PEproject>
   <Header>
-    <Name>FS32K_01_UART_SPI_ADS7953_CAN</Name>
+    <Name>FS32K_07_IEPE</Name>
     <SavedBy>Administrator</SavedBy>
-    <ModificationStamp>30</ModificationStamp>
+    <ModificationStamp>34</ModificationStamp>
     <Date>2025-11-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1743-0713</PEversion>
@@ -23933,7 +23933,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>100000</Value>
+        <Value>20000000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

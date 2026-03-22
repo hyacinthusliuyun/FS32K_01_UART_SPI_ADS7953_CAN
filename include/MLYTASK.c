@@ -64,5 +64,6 @@ void ADC_PROC(void)
 
 void ADS7953_PROC(void)
 {
+    /* ADS7953_Scan()内部根据ADS7953_TX_USE_JUSTFLOAT选择JustFloat发送 */
     ADS7953_Scan();
 }

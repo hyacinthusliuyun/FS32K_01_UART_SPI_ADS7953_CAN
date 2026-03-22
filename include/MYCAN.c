@@ -1,11 +1,11 @@
 #include "Cpu.h"
 #include "USERINIT.h"
-#include "can_pal1.h"          // S32DS Éú³ÉµÄ×é¼şÍ·ÎÄ¼ş
+#include "can_pal1.h"          // S32DS ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ï¿½Í·ï¿½Ä¼ï¿½
 #include "can_pal.h"
 #include "MYCAN.H"
 
-can_message_t txMsg = {0};    // ·¢ËÍ»º³åÇø
-can_message_t rxMsg = {0};    // ½ÓÊÕ»º³åÇø
+can_message_t txMsg = {0};    // ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½
+can_message_t rxMsg = {0};    // ï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½
 volatile bool rxComplete = false;
 
 extern const can_instance_t can_pal1_instance;
@@ -40,9 +40,9 @@ void CAN1_RxTxCallback(uint32_t instance,
     (void)instance;
     (void)buffIdx;
     (void)flexcanState;
-    // MLY_UART1_SEND("MLY_DEBUG CAN_CALLBACK USEING\r\n");
+    // MLY_UART1_SEND("INFO:CAN_CALLBACK USEING\r\n");
 
-    //    ÊÂ¼şÖµ¶ÔÕÕ±í
+    //    ï¿½Â¼ï¿½Öµï¿½ï¿½ï¿½Õ±ï¿½
     MLY_UART1_SEND("CB:inst=%d,evt=%d,buf=%d\r\n", instance, event, buffIdx);
     //    0 = RX_COMPLETE
     //    1 = TX_COMPLETE
@@ -53,7 +53,7 @@ void CAN1_RxTxCallback(uint32_t instance,
     if (event == CAN_EVENT_RX_COMPLETE)
     {
         
-        MLY_UART1_SEND("MLY_DEBUG CAN_EVENT_RX_COMPLETE over \r\n");
+        MLY_UART1_SEND("INFO:CAN_EVENT_RX_COMPLETE over \r\n");
     	MLY_UART1_SEND("Loopback OK!  ID=%03X  len=%d  data=%02X %02X %02X %02X\r\n",
                        rxMsg.id,
                        rxMsg.length,
@@ -67,33 +67,33 @@ void CAN1_RxTxCallback(uint32_t instance,
     				if (memcmp((char*)rxMsg.data, "#L10!", 5) == 0) LED1_FLAG = 0;
     		}
     	CAN_Receive(&can_pal1_instance, RX_MAILBOX, &rxMsg);
-    	MLY_UART1_SEND("MLY_DEBUG CANRX CB over\r\n");
+    	MLY_UART1_SEND("INFO:CANRX CB over\r\n");
         
     }
 }
 
 void APP_CAN_Init(void)
 {
-    MLY_UART1_SEND("MLY_DEBUG CAN_INIT beginning\r\n");
+    MLY_UART1_SEND("INFO:CAN_INIT beginning\r\n");
     //ISR
     INT_SYS_SetPriority(CAN1_ORed_0_15_MB_IRQn, 4); 
     INT_SYS_EnableIRQ(CAN1_ORed_0_15_MB_IRQn);
-    MLY_UART1_SEND("MLY_DEBUG CAN_ISR OK\r\n");
+    MLY_UART1_SEND("INFO:CAN_ISR OK\r\n");
     //Init
     CAN_Init(&can_pal1_instance, &can_pal1_Config0);
-    CAN_ConfigRxBuff(&can_pal1_instance, RX_MAILBOX, &Rx_buffCfg, Rx_Filter); //×¢²á½ÓÊÕÅäÖÃºÍMSGID¹ıÂËÆ÷(Èç¹ıÂËÆ÷ÅäÖÃÎª0x1£¬ÔòÖ»½ÓÊÜmsgid 0x1·¢À´µÄ±¨ÎÄ)
-    CAN_ConfigTxBuff(&can_pal1_instance, TX_MAILBOX, &Tx_buffCfg); //ÅäÖÃ·¢ËÍ
-    /*ÉèÖÃMSGIDµÄÑÚÂë£¬ÑÚÂë´ÖÂÔ¿ÉÒÔÀí½âÎª¶Ô11bit MSGIDµØÖ·µÄ¹ıÂË
-    Èç¹ûÄ³bitÎ»ĞèÒª¹ıÂËÉèÖÃÎª1,²»¹ıÂËÉèÖÃÎª0,ÀıÈçÑÚÂëÉèÖÃÎª0x7ffÔò¹ıÂËÈ«²¿±ê×¼id,Èç¹ûÉèÖÃÎª0x7fe,ÕâÖ»ÄÜ½ÓÊÜ0x01µÄ±¨ÎÄ(²»´æÔÚ0x0µÄµØÖ·)*/
-    CAN_SetRxFilter(&can_pal1_instance,CAN_MSG_ID_STD,RX_MAILBOX,RX_MASK); //ÉèÖÃMSGIDÑÚÂë£¬
+    CAN_ConfigRxBuff(&can_pal1_instance, RX_MAILBOX, &Rx_buffCfg, Rx_Filter); //×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½MSGIDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0x1ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½msgid 0x1ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½)
+    CAN_ConfigTxBuff(&can_pal1_instance, TX_MAILBOX, &Tx_buffCfg); //ï¿½ï¿½ï¿½Ã·ï¿½ï¿½ï¿½
+    /*ï¿½ï¿½ï¿½ï¿½MSGIDï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½11bit MSGIDï¿½ï¿½Ö·ï¿½Ä¹ï¿½ï¿½ï¿½
+    ï¿½ï¿½ï¿½Ä³bitÎ»ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª1,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0x7ffï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½×¼id,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0x7fe,ï¿½ï¿½Ö»ï¿½Ü½ï¿½ï¿½ï¿½0x01ï¿½Ä±ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0x0ï¿½Äµï¿½Ö·)*/
+    CAN_SetRxFilter(&can_pal1_instance,CAN_MSG_ID_STD,RX_MAILBOX,RX_MASK); //ï¿½ï¿½ï¿½ï¿½MSGIDï¿½ï¿½ï¿½ë£¬
 
-    MLY_UART1_SEND("MLY_DEBUG CAN_InstallEventCallback beginning\r\n");
+    MLY_UART1_SEND("INFO:CAN_InstallEventCallback beginning\r\n");
     CAN_InstallEventCallback(&can_pal1_instance,CAN1_RxTxCallback,NULL);
-    MLY_UART1_SEND("MLY_DEBUG CAN_InstallEventCallback over\r\n");
+    MLY_UART1_SEND("INFO:CAN_InstallEventCallback over\r\n");
 
-    //     /* °Ñ MB0 ÉèÎª¡°Ö»ÊÕ 0x123¡± */
+    //     /* ï¿½ï¿½ MB0 ï¿½ï¿½Îªï¿½ï¿½Ö»ï¿½ï¿½ 0x123ï¿½ï¿½ */
     // APP_CAN_SetRxMask(); 
-    /*Æô¶¯½ÓÊÕ*/
+    /*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
     CAN_Receive(&can_pal1_instance, RX_MAILBOX, &rxMsg);
    
     MLY_UART1_SEND("can_pal1_instance @ %p\r\n", &can_pal1_instance);
@@ -121,15 +121,15 @@ void APP_CAN_Send(uint32_t id, const uint8_t *data, uint8_t len)
 
 }
 
-//TMD ÊÜ²»ÁËÁË Ö±½Ó»Ø»·²âÊÔ
+//TMD ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½ Ö±ï¿½Ó»Ø»ï¿½ï¿½ï¿½ï¿½ï¿½
 void APP_CAN_LoopbackTest(void)
 {
     static uint32_t cnt = 0;
     // if (cnt == 0)MLY_UART1_SEND("Loopback Startr\r\n");
 
-    /* ¹¹ÔìÊı¾İ 0x00 -> 0x63 */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0x00 -> 0x63 */
     uint8_t LoopbackTXdate[8] = {cnt, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77};
-    APP_CAN_Send(0x123U, LoopbackTXdate, 8);          /* ·¢ËÍÒ»Ö¡ */
+    APP_CAN_Send(0x123U, LoopbackTXdate, 8);          /* ï¿½ï¿½ï¿½ï¿½Ò»Ö¡ */
     // cnt++;
     // if (cnt >= 100000) cnt = 0; 
 }

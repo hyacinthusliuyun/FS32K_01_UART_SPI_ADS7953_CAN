@@ -28,6 +28,7 @@
 #include "MYADC.h"
 //#include "LiuyunSPI.h"
 #include "LiuyunLPSPI2.h"
+#include "JustFloatUART.h"
 
 
 #define TIMEOUT 200UL
