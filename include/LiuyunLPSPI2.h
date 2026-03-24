@@ -10,6 +10,7 @@ extern uint32_t ADS7953_SpiOkCnt;
 extern uint32_t ADS7953_TagErrCnt;
 
 void ADS7953_Scan(void);
+void ADS7953_Scan_channel(uint8_t ch);
 void ADS7953_ScanAll_Manual(void);
 void ADS7953_CheckChannel(uint8_t ch);
 uint16_t ADS7953_GetValidBitmap(void);

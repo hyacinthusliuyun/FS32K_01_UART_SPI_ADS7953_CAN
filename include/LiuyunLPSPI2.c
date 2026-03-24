@@ -17,7 +17,7 @@
 #define ADS7953_CMD_PWR_UP_BIT       0x0020U
 //DEBUG INFO 可以0禁用 1打开 主要用于看SPI传输 
 #define ADS7953_DEBUG_RAW_FRAME      0U
-#define ADS7953_DEBUG_RX_ALL_ZERO    1U
+#define ADS7953_DEBUG_RX_ALL_ZERO    0U
 
 /* 16通道原始采样缓存（按返回tag索引） */
 uint32_t ADS7953_GetValueOrig[ADS7953_CH_COUNT] = {0};
@@ -179,25 +179,42 @@ void ADS7953_ScanAll_Manual(void)
 #endif
 }
 
-/* 单通道快速检查：用于调试时快速确认某一通道缓存是否更新 */
-void ADS7953_CheckChannel(uint8_t ch)
+/* 单通道扫描：只扫描指定通道，输出该通道值 */
+void ADS7953_Scan_channel(uint8_t ch)
 {
+    uint16_t rx = 0U;
+
     if (ch >= ADS7953_CH_COUNT)
     {
         MLY_UART1_SEND("ADS7953 ch invalid: %d\r\n", ch);
         return;
     }
 
-    MLY_UART1_SEND("ADS7953_CH%d=%lu valid=%u tagSeen=%u spiErr=%lu\r\n",
+    /* 清零该通道状态 */
+    ADS7953_TagSeen[ch] = 0U;
+    ADS7953_DataValid[ch] = 0U;
+
+    /* 发送单通道命令并读取 */
+    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
+
+    /* 追加1帧flush */
+    OSIF_TimeDelay(1);
+    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
+
+#if ADS7953_TX_USE_JUSTFLOAT
+    JFLOAT_UART_SendAds16RawAsFloat(ADS7953_GetValueOrig, ADS7953_DataValid);
+#else
+    MLY_UART1_SEND("ch%u=%lu(v=%u) spiErr=%lu\r\n",
                    ch,
                    ADS7953_GetValueOrig[ch],
                    ADS7953_DataValid[ch],
-                   ADS7953_TagSeen[ch],
                    ADS7953_SpiErrCnt);
+#endif
 }
 
-/* 任务入口：当前固定走Manual整帧扫描 */
+/* 任务入口：当前固定走单通道扫描（CH13） */
 void ADS7953_Scan(void)
 {
     ADS7953_ScanAll_Manual();
+    // ADS7953_Scan_channel(8U);
 }

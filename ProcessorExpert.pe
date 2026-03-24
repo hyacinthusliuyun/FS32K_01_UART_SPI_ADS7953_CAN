@@ -3,7 +3,7 @@
   <Header>
     <Name>FS32K_07_IEPE</Name>
     <SavedBy>Administrator</SavedBy>
-    <ModificationStamp>34</ModificationStamp>
+    <ModificationStamp>36</ModificationStamp>
     <Date>2025-11-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1743-0713</PEversion>
@@ -6071,7 +6071,7 @@
         <ItemSymbol>ProjectComponentsCountChanged</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>2</Value>
+        <Value>1</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuleName_ADC</ItemSymbol>
@@ -23933,7 +23933,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>20000000</Value>
+        <Value>1000000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

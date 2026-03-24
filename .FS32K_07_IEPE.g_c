@@ -638,7 +638,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>34</ProjectModificationStamp>
+    <ProjectModificationStamp>36</ProjectModificationStamp>
   </Options>
   <CpuID_5>
     <Generated>true</Generated>
@@ -646,8 +646,8 @@
     <GenComponentVersion>01.197</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule>Events</GenEventModule>
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>3</GenNumMethods>
     <SystemInit>true</SystemInit>
@@ -699,8 +699,8 @@
     <GenComponentVersion>SDK_S32K1xx_15</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>6</GenNumMethods>
     <CLOCK_DRV_Init>true</CLOCK_DRV_Init>
@@ -731,8 +731,8 @@
     <GenComponentVersion>1.2.0</GenComponentVersion>
     <GenDriverVersion>1.4</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
     <PINS_DRV_Init>true</PINS_DRV_Init>
@@ -778,8 +778,8 @@
     <GenComponentVersion>SDK_S32K1xx_15</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>16</GenNumMethods>
     <CAN_Init>true</CAN_Init>
@@ -814,8 +814,8 @@
     <GenComponentVersion>SDK_S32K1xx_15</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>15</GenNumMethods>
     <UART_GetDefaultConfig>true</UART_GetDefaultConfig>
@@ -911,8 +911,8 @@
     <GenComponentVersion>SDK_S32K1xx_15</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>32</GenNumMethods>
     <EDMA_DRV_Init>true</EDMA_DRV_Init>
@@ -966,8 +966,8 @@
     <GenComponentVersion>SDK_S32K1xx_15</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
     <ADC_DRV_InitConverterStruct>true</ADC_DRV_InitConverterStruct>
@@ -1011,8 +1011,8 @@
     <GenComponentVersion>1.0.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551149178</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551399296</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>16</GenNumMethods>
     <LPSPI_DRV_MasterGetDefaultConfig>true</LPSPI_DRV_MasterGetDefaultConfig>
@@ -1053,8 +1053,8 @@
     <GenComponentVersion>1.0.0</GenComponentVersion>
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551137947</HeaderAge>
-    <CodeAge>1551137947</CodeAge>
+    <HeaderAge>1551285583</HeaderAge>
+    <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>16</GenNumMethods>
     <LPSPI_DRV_MasterGetDefaultConfig>true</LPSPI_DRV_MasterGetDefaultConfig>
