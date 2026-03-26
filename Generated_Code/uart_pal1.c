@@ -7,7 +7,7 @@
 **     Version     : Component SDK_S32K1xx_15, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2026-03-20, 15:36, # CodeGen: 0
+**     Date/Time   : 2026-03-24, 17:40, # CodeGen: 10
 **
 **     Copyright 1997 - 2015 Freescale Semiconductor, Inc. 
 **     Copyright 2016-2017 NXP 
@@ -54,7 +54,7 @@ const uart_instance_t uart_pal1_instance = {
 
 /* Serial User Configurations */
 const uart_user_config_t uart_pal1_Config0 = {
-    .baudRate         = 9600,
+    .baudRate         = 115200,
     .bitCount         = UART_8_BITS_PER_CHAR,
     .parityMode       = UART_PARITY_DISABLED,
     .stopBitCount     = UART_ONE_STOP_BIT,

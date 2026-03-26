@@ -638,7 +638,7 @@
     </GenFiles>
     <SignalListFile />
     <DestinationCompiler>GNUC</DestinationCompiler>
-    <ProjectModificationStamp>36</ProjectModificationStamp>
+    <ProjectModificationStamp>50</ProjectModificationStamp>
   </Options>
   <CpuID_5>
     <Generated>true</Generated>
@@ -700,7 +700,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
     <HeaderAge>1551285583</HeaderAge>
-    <CodeAge>1551285583</CodeAge>
+    <CodeAge>1551518178</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>6</GenNumMethods>
     <CLOCK_DRV_Init>true</CLOCK_DRV_Init>
@@ -731,7 +731,7 @@
     <GenComponentVersion>1.2.0</GenComponentVersion>
     <GenDriverVersion>1.4</GenDriverVersion>
     <GenEventModule />
-    <HeaderAge>1551285583</HeaderAge>
+    <HeaderAge>1551518178</HeaderAge>
     <CodeAge>1551285583</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>25</GenNumMethods>
@@ -815,7 +815,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
     <HeaderAge>1551285583</HeaderAge>
-    <CodeAge>1551285583</CodeAge>
+    <CodeAge>1551404293</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>15</GenNumMethods>
     <UART_GetDefaultConfig>true</UART_GetDefaultConfig>
@@ -1012,7 +1012,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
     <HeaderAge>1551285583</HeaderAge>
-    <CodeAge>1551399296</CodeAge>
+    <CodeAge>1551520102</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>16</GenNumMethods>
     <LPSPI_DRV_MasterGetDefaultConfig>true</LPSPI_DRV_MasterGetDefaultConfig>
@@ -1054,7 +1054,7 @@
     <GenDriverVersion>01.00</GenDriverVersion>
     <GenEventModule />
     <HeaderAge>1551285583</HeaderAge>
-    <CodeAge>1551285583</CodeAge>
+    <CodeAge>1551518178</CodeAge>
     <AsemblAge>-1</AsemblAge>
     <GenNumMethods>16</GenNumMethods>
     <LPSPI_DRV_MasterGetDefaultConfig>true</LPSPI_DRV_MasterGetDefaultConfig>

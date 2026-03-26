@@ -43,7 +43,7 @@
       <File Name="SDK/platform/drivers/src/pins/pins_port_hw_access.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214266" FileType="1048576" CompNumb="8" />
       <File Name="SDK/platform/pal/inc/uart_pal.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214291" FileType="1048576" CompNumb="0" />
       <File Name="Generated_Code/uart_pal_cfg.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214340" FileType="45637" CompNumb="5" />
-      <File Name="SDK/platform/devices/S32K148/include/S32K148_features.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214314" FileType="1048576" CompNumb="5" />
+      <File Name="SDK/platform/devices/S32K148/include/S32K148_features.h" FileDate="2026-03-26, 09:20:31" FileAge="1774488031871" FileType="1048576" CompNumb="5" />
       <File Name="SDK/platform/pal/src/can/can_pal.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214284" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/src/lpspi/lpspi_irq.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214296" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/src/lpuart/lpuart_hw_access.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214326" FileType="1048576" CompNumb="5" />
@@ -52,9 +52,9 @@
       <File Name="SDK/platform/drivers/src/lpuart/lpuart_hw_access.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214325" FileType="1048576" CompNumb="5" />
       <File Name="SDK/platform/drivers/inc/edma_driver.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214283" FileType="1048576" CompNumb="15" />
       <File Name="Generated_Code/lpspiCom2.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150218" FileType="45637" CompNumb="18" />
-      <File Name="Generated_Code/lpspiCom2.c" FileDate="2026-03-24, 15:12:00" FileAge="1774336320423" FileType="45637" CompNumb="18" />
+      <File Name="Generated_Code/lpspiCom2.c" FileDate="2026-03-26, 10:11:13" FileAge="1774491073725" FileType="45637" CompNumb="18" />
       <File Name="Generated_Code/lpspiCom1.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150218" FileType="45637" CompNumb="19" />
-      <File Name="Generated_Code/lpspiCom1.c" FileDate="2026-03-22, 23:42:30" FileAge="1774194150218" FileType="45637" CompNumb="19" />
+      <File Name="Generated_Code/lpspiCom1.c" FileDate="2026-03-26, 09:15:04" FileAge="1774487704692" FileType="45637" CompNumb="19" />
       <File Name="SDK/platform/devices/S32K148/include/S32K148.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214317" FileType="1048576" CompNumb="5" />
       <File Name="SDK/platform/drivers/src/clock/S32K1xx/sim_hw_access.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214257" FileType="1048576" CompNumb="7" />
       <File Name="SDK/platform/devices/device_registers.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214306" FileType="1048576" CompNumb="5" />
@@ -86,7 +86,7 @@
       <File Name="SDK/platform/drivers/src/edma/edma_hw_access.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214279" FileType="1048576" CompNumb="15" />
       <File Name="SDK/platform/drivers/src/flexcan/flexcan_irq.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214323" FileType="1048576" CompNumb="5" />
       <File Name="SDK/platform/devices/S32K148/startup/system_S32K148.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214312" FileType="1048576" CompNumb="5" />
-      <File Name="Generated_Code/clockMan1.c" FileDate="2026-03-22, 23:42:30" FileAge="1774194150217" FileType="45637" CompNumb="7" />
+      <File Name="Generated_Code/clockMan1.c" FileDate="2026-03-26, 09:15:04" FileAge="1774487704689" FileType="45637" CompNumb="7" />
       <File Name="SDK/platform/drivers/src/lpspi/lpspi_hw_access.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214300" FileType="1048576" CompNumb="0" />
       <File Name="Documentation/FS32K_07_IEPE_Settings.xml" FileDate="2026-03-22, 23:42:30" FileAge="1774194150215" FileType="3072" />
       <File Name="SDK/platform/drivers/src/clock/S32K1xx/pcc_hw_access.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214253" FileType="1048576" CompNumb="7" />
@@ -94,11 +94,11 @@
       <File Name="SDK/platform/drivers/src/adc/adc_driver.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214292" FileType="1048576" CompNumb="16" />
       <File Name="Generated_Code/uart_pal1.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150220" FileType="45637" CompNumb="11" />
       <File Name="SDK/platform/drivers/inc/clock_manager.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214261" FileType="1048576" CompNumb="7" />
-      <File Name="Generated_Code/uart_pal1.c" FileDate="2026-03-22, 23:42:30" FileAge="1774194150220" FileType="45637" CompNumb="11" />
+      <File Name="Generated_Code/uart_pal1.c" FileDate="2026-03-24, 17:40:11" FileAge="1774345211140" FileType="45637" CompNumb="11" />
       <File Name="Documentation/FS32K_07_IEPE.txt" FileDate="2026-03-22, 23:42:30" FileAge="1774194150215" FileType="3072" />
       <File Name="SDK/platform/drivers/src/pins/pins_driver.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214262" FileType="1048576" CompNumb="8" />
       <File Name="SDK/platform/pal/inc/uart_pal_mapping.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214290" FileType="1048576" CompNumb="0" />
-      <File Name="Generated_Code/pin_mux.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150219" FileType="45637" CompNumb="8" />
+      <File Name="Generated_Code/pin_mux.h" FileDate="2026-03-26, 09:15:04" FileAge="1774487704687" FileType="45637" CompNumb="8" />
       <File Name="SDK/platform/drivers/inc/lpspi_shared_function.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214301" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/inc/pins_driver.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214265" FileType="1048576" CompNumb="8" />
       <File Name="Generated_Code/pin_mux.c" FileDate="2026-03-22, 23:42:30" FileAge="1774194150219" FileType="45637" CompNumb="8" />
@@ -113,5 +113,5 @@
       <File Name="SDK/platform/drivers/src/lpspi/lpspi_shared_function.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214297" FileType="1048576" CompNumb="0" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>9</CodeGenReference>
+  <CodeGenReference>23</CodeGenReference>
 </CodeGenerationInfo>

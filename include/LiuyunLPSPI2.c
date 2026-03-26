@@ -2,11 +2,7 @@
 #include "LiuyunLPSPI2.h"
 #include "JustFloatUART.h"
 #include "osif.h"
-
-/*
-    当前串口发送为请看JustFloatUART.C.H
-    默认为justfloat协议，如不需要请更改上述.h的ADS7953_TX_USE_JUSTFLOAT为0
-*/
+/*默认为justfloat协议ADS7953_TX_USE_JUSTFLOAT*/
 
 #define ADS7953_CH_COUNT             16U
 #define ADS7953_CMD_MODE_MANUAL      0x1000U
@@ -17,7 +13,6 @@
 /* RANGE: 0=0~VREF(2.5V), 1=0~2*VREF(5V) - 我们硬件用5V量程所以用1 */
 #define ADS7953_CMD_RANGE_BIT        0x0040U
 #define ADS7953_CMD_PWR_UP_BIT       0x0020U
-//DEBUG INFO 可以0禁用 1打开 主要用于看SPI传输
 #define ADS7953_DEBUG_RAW_FRAME      0U
 #define ADS7953_DEBUG_RX_ALL_ZERO    1U
 
@@ -28,14 +23,13 @@ uint8_t ADS7953_DataValid[ADS7953_CH_COUNT] = {0};
 
 uint32_t ADS7953_SpiErrCnt = 0;
 uint32_t ADS7953_SpiOkCnt = 0;
-/* 统计本轮"缺失通道"次数（按tag未覆盖） */
+/* 本轮缺失通道次数 */
 uint32_t ADS7953_TagErrCnt = 0;
-
-/* 本轮扫描中各通道是否收到过有效tag */
+/* 有效tag */
 static uint8_t ADS7953_TagSeen[ADS7953_CH_COUNT] = {0};
 /* 最近一次SPI传输状态 */
 static status_t ADS7953_LastSpiStatus = STATUS_SUCCESS;
-/* 前向声明：ADS7953_ReadWrite 必须在使用前声明 */
+
 static uint8_t ADS7953_ReadWrite(uint16_t cmd16, uint16_t *rx16);
 
 /* Manual模式命令字：
@@ -67,19 +61,17 @@ static inline uint16_t ADS7953_CmdManualWithReset(void)
     return cmd;
 }
 
-/* 参考 TI 官方例程的 initialize_pipeline：
- * SPI pipeline 需要 2 帧来完成初始化
+/* 参考 TI 官方 ads79xx.c 的 initialize_pipeline：
+ * 不使用 RESET_CHAN，只发 2 帧相同命令
  * 第1帧：启动通道选择
- * 第2帧：开始采集，此时无有效数据返回
+ * 第2帧：开始采集，此时无有效数据返回（2帧结果都丢弃）
  */
 static void ADS7953_InitPipeline(void)
 {
-    uint16_t cmd = ADS7953_CmdManualWithReset();
-    uint16_t dummy;  /* 丢弃初始化期间的无用数据 */
-    (void)ADS7953_ReadWrite(cmd, &dummy);  /* 第1帧：带RESET_CHAN，重置通道计数器 */
-    OSIF_TimeDelay(1);
-    (void)ADS7953_ReadWrite(cmd, &dummy);  /* 第2帧：开始采集，无有效数据 */
-    OSIF_TimeDelay(1);
+    uint16_t cmd = ADS7953_CmdManual(0U);  /* 不带RESET_CHAN，使用通道0 */
+    uint16_t dummy;
+    (void)ADS7953_ReadWrite(cmd, &dummy);  /* 第1帧 */
+    (void)ADS7953_ReadWrite(cmd, &dummy);  /* 第2帧 */
 }
 
 
@@ -164,56 +156,57 @@ uint16_t ADS7953_GetValidBitmap(void)
 }
 
 /* Manual模式整帧扫描：
- * 参考 TI 官方 ads79xx.c 实现
- * 注意：由于ADS7953 pipeline延迟导致rx中的tag不可预测，
- *      所有通道数据改用发送顺序索引（ch）而非tag索引
- * 流程：
- *   1) ADS7953_InitPipeline() - 发送 RESET_CHAN + 2帧初始化
- *   2) 对每个通道发送2次命令：第1次触发转换，第2次读取结果
- *   3) 直接按ch索引存储rx的低12位值，忽略rx.tag
- *   4) 最后 flush 2帧确保 pipeline 清空
+ * 参考 TI 官方 ads79xx.c 的 CaptureConversions 模式
+ *
+ * ADS7953 pipeline 核心原则：每次发送命令后，response 包含的是上一次转换的结果
+ *
+ * 正确时序（共 18+1=19 帧，得到 16 个有效结果）：
+ *   帧0-1: ADS7953_InitPipeline() - 2帧初始化，结果丢弃
+ *   帧2:   发送 cmd(0), 接收 = init最后1帧的结果（垃圾）
+ *   帧3:   发送 cmd(1), 接收 = ch0 的结果  → 存入 ch0
+ *   帧4:   发送 cmd(2), 接收 = ch1 的结果  → 存入 ch1
+ *   ...
+ *   帧17:  发送 cmd(15),接收 = ch14的结果  → 存入 ch14
+ *   帧18:  发送 cmd(0), 接收 = ch15的结果  → 存入 ch15
+ *
+ * 总共 19 帧（2 init + 16 scan + 1 flush），得到 ch0~ch15 共 16 个有效结果
  */
 void ADS7953_ScanAll_Manual(void)
 {
     uint16_t rx = 0U;
+    uint16_t cmd = 0U;
     uint8_t missing = 0U;
 
     memset(ADS7953_TagSeen, 0, sizeof(ADS7953_TagSeen));
     memset(ADS7953_DataValid, 0, sizeof(ADS7953_DataValid));
 
-    /* Step 1: 参考 TI initialize_pipeline - RESET_CHAN + 2帧初始化 */
+    /* Step 1: TI initialize_pipeline - 2帧初始化，结果丢弃 */
     ADS7953_InitPipeline();
 
-    /* Step 2: 对每个通道：
-     * 第1次 ReadWrite: 触发转换，读取的是 pipeline 中残留的旧数据（丢弃）
-     * 第2次 ReadWrite: 读取本次通道的转换结果
-     * 直接用 ch 作为数组索引，忽略 rx 中的 tag */
-    for (uint8_t ch = 0U; ch < ADS7953_CH_COUNT; ++ch)
+    /* Step 2: 顺序发送 cmd(0)~cmd(15)，每次接收上一帧的结果
+     * rx[ch_idx] 包含的是上一次命令的结果
+     * ch_idx=0 时 rx 是 init 的垃圾数据，丢弃
+     * ch_idx=1 时 rx 是 ch0 的结果，存入 ch0
+     * ...
+     * ch_idx=15 时 rx 是 ch14 的结果，存入 ch14
+     */
+    for (uint8_t ch_idx = 0U; ch_idx < ADS7953_CH_COUNT; ++ch_idx)
     {
-        /* 第1帧：触发 ch 的转换 */
-        (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
-        OSIF_TimeDelay(1);
+        cmd = ADS7953_CmdManual(ch_idx);
+        (void)ADS7953_ReadWrite(cmd, &rx);
 
-        /* 第2帧：读取 ch 的转换结果 */
-        (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
-        OSIF_TimeDelay(1);
-
-        if (ADS7953_IsRxFrameValid(rx) != 0U)
+        /* ch_idx=0 时 rx 是垃圾，ch_idx>=1 时 rx 才是对应通道的结果 */
+        if ((ch_idx >= 1U) && (ADS7953_IsRxFrameValid(rx) != 0U))
         {
-            ADS7953_StoreByChannel(ch, (uint16_t)(rx & 0x0FFFU));
+            ADS7953_StoreByChannel(ch_idx - 1U, (uint16_t)(rx & 0x0FFFU));
         }
     }
 
-    /* Step 3: flush 2帧确保 pipeline 清空（用ch=0存储） */
-    for (uint8_t flush = 0U; flush < 2U; ++flush)
+    /* Step 3: 再发 1 帧 cmd(0)，把 ch15 的结果读出来 */
+    (void)ADS7953_ReadWrite(ADS7953_CmdManual(0U), &rx);
+    if (ADS7953_IsRxFrameValid(rx) != 0U)
     {
-        (void)ADS7953_ReadWrite(ADS7953_CmdManual(0U), &rx);
-        OSIF_TimeDelay(1);
-
-        if (ADS7953_IsRxFrameValid(rx) != 0U)
-        {
-            ADS7953_StoreByChannel(0U, (uint16_t)(rx & 0x0FFFU));
-        }
+        ADS7953_StoreByChannel(15U, (uint16_t)(rx & 0x0FFFU));
     }
 
     missing = 0U;
@@ -247,11 +240,13 @@ void ADS7953_ScanAll_Manual(void)
 }
 
 /* 单通道扫描：只扫描指定通道，输出该通道值
- * 注意：改用发送顺序索引，忽略rx中的tag
- * 流程：
- * 1) ADS7953_InitPipeline() - 复位 + 初始化 pipeline
- * 2) 发送目标通道命令2次
- * 3) 用ch索引存储结果
+ *
+ * ADS7953 pipeline 原则：response 包含上一次命令的结果
+ *
+ * 正确流程（共 4 帧）：
+ *   帧0-1: ADS7953_InitPipeline() - 2帧初始化，结果丢弃
+ *   帧2:   发送 cmd(ch), 接收 = init最后1帧的结果（垃圾，丢弃）
+ *   帧3:   发送 cmd(ch), 接收 = ch 的结果（有效，存入 ch）
  */
 void ADS7953_Scan_channel(uint8_t ch)
 {
@@ -267,16 +262,14 @@ void ADS7953_Scan_channel(uint8_t ch)
     memset(ADS7953_TagSeen, 0, sizeof(ADS7953_TagSeen));
     memset(ADS7953_DataValid, 0, sizeof(ADS7953_DataValid));
 
-    /* Step 1: 复位 + 初始化 pipeline */
+    /* Step 1: TI initialize_pipeline - 2帧初始化 */
     ADS7953_InitPipeline();
 
-    /* Step 2: 发送目标通道命令2次 */
-    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);  /* 第1帧：触发转换 */
-    OSIF_TimeDelay(1);
-    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);  /* 第2帧：读取结果 */
-    OSIF_TimeDelay(1);
+    /* Step 2: 第1次发送 cmd(ch)，接收垃圾（init 最后1帧的结果，丢弃） */
+    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
 
-    /* Step 3: 用ch索引存储结果，忽略rx.tag */
+    /* Step 3: 第2次发送 cmd(ch)，接收 ch 的转换结果（有效） */
+    (void)ADS7953_ReadWrite(ADS7953_CmdManual(ch), &rx);
     if (ADS7953_IsRxFrameValid(rx) != 0U)
     {
         ADS7953_StoreByChannel(ch, (uint16_t)(rx & 0x0FFFU));
@@ -291,6 +284,144 @@ void ADS7953_Scan_channel(uint8_t ch)
                    ADS7953_DataValid[ch],
                    ADS7953_SpiErrCnt);
 #endif
+}
+
+/* 单帧测试：每帧命令后等待片刻，看 ADS7953 是否能进入 Manual Mode
+ *
+ * 测试思路：
+ * 1. 先发 RESET 命令让 ADS7953 进入已知状态
+ * 2. 再发 MANUAL 命令，看 tag 是否变为 1
+ *
+ * 只发一帧命令，中间隔一段时间，确保 ADS7953 有时间处理
+ */
+void ADS7953_TestSingleFrame(void)
+{
+    uint16_t cmd;
+    uint8_t tx[2];
+    uint8_t rx[2] = {0};
+    volatile uint32_t delay;
+
+    /* 测试0: 发送 RESET 命令 (0x1C60)，让 ADS7953 进入 Manual 模式
+     * 根据 datasheet，RESET_CHAN 位可重置通道计数器，使能编程 */
+    cmd = 0x1C60U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+
+    /* 延时一段时间，让 ADS7953 处理 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 再发一帧同样的命令，看 tag 是否为 1 */
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T0 afterReset rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试1: 0x1860 - 标准 Manual 命令 (无 RESET) */
+    cmd = 0x1860U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T1 cmd=1860 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试2: 0x1C60 - 带 RESET_CHAN */
+    cmd = 0x1C60U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T2 cmd=1C60 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试3: 0x1800 - 无 ENABLE_PROG (手册说此位必须为1才能编程) */
+    cmd = 0x1800U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T3 cmd=1800 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试4: 0x9D60 - 最高位为1的命令 */
+    cmd = 0x9D60U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T4 cmd=9D60 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试5: 0xA000 - Auto-2 模式 (PWR_UP=0)
+     * [15:12]=1010=Auto2, [11]=0=ENABLE_PROG关闭, [5]=0=PWR_UP关闭 */
+    cmd = 0xA000U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T5 cmd=A000 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试6: 0xE000 - Auto-2 模式 (PWR_UP=1)
+     * [15:12]=1110=Auto2?, [11]=0=ENABLE_PROG关闭, [5]=1=PWR_UP开启 */
+    cmd = 0xE000U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T6 cmd=E000 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试7: 0x8000 - Auto-1 模式
+     * [15:12]=1000=Auto1, [11]=0, [5]=0 */
+    cmd = 0x8000U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T7 cmd=8000 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+
+    /* 延时 */
+    for (delay = 0; delay < 10000U; delay++) { }
+
+    /* 测试8: 0xC000 - Auto-2 变体 (PWR_UP=0) */
+    cmd = 0xC000U;
+    tx[0] = (uint8_t)(cmd >> 8);
+    tx[1] = (uint8_t)(cmd & 0xFFU);
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    for (delay = 0; delay < 10000U; delay++) { }
+    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    MLY_UART1_SEND("T8 cmd=C000 rx=%02X%02X tag=%u\r\n",
+                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
 }
 
 /* 任务入口：当前固定走单通道扫描（CH13） */

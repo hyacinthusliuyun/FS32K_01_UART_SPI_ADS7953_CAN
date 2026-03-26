@@ -3,7 +3,7 @@
   <Header>
     <Name>FS32K_07_IEPE</Name>
     <SavedBy>Administrator</SavedBy>
-    <ModificationStamp>36</ModificationStamp>
+    <ModificationStamp>50</ModificationStamp>
     <Date>2025-11-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1743-0713</PEversion>
@@ -2761,8 +2761,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
-        <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
+        <Index>3</Index>
+        <EnumSymbVal>CLK_SRC_FIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral7_MUL_SEL0</ItemSymbol>
@@ -2774,7 +2774,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral7_FUNC_CLK0</ItemSymbol>
-        <Value>8 MHz</Value>
+        <Value>48 MHz</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral8_CLK_Grp0</ItemSymbol>
@@ -2817,8 +2817,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
-        <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
+        <Index>3</Index>
+        <EnumSymbVal>CLK_SRC_FIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral8_MUL_SEL0</ItemSymbol>
@@ -2830,7 +2830,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral8_FUNC_CLK0</ItemSymbol>
-        <Value>8 MHz</Value>
+        <Value>48 MHz</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral9_CLK_Grp0</ItemSymbol>
@@ -2873,8 +2873,8 @@
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
         <TypeSpecNameState>typePCS_DIV2_CLK</TypeSpecNameState>
-        <Index>2</Index>
-        <EnumSymbVal>CLK_SRC_SIRC_DIV2</EnumSymbVal>
+        <Index>3</Index>
+        <EnumSymbVal>CLK_SRC_FIRC_DIV2</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral9_MUL_SEL0</ItemSymbol>
@@ -2886,7 +2886,7 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral9_FUNC_CLK0</ItemSymbol>
-        <Value>8 MHz</Value>
+        <Value>48 MHz</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>Peripheral19_CLK_Grp0</ItemSymbol>
@@ -5938,15 +5938,15 @@
       </ItemState>
       <ItemState>
         <ItemSymbol>LPSPI0_CLK0</ItemSymbol>
-        <Value>8000000</Value>
+        <Value>48000000</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LPSPI1_CLK0</ItemSymbol>
-        <Value>8000000</Value>
+        <Value>48000000</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LPSPI2_CLK0</ItemSymbol>
-        <Value>8000000</Value>
+        <Value>48000000</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>LPTMR0_CLK0</ItemSymbol>
@@ -6071,7 +6071,7 @@
         <ItemSymbol>ProjectComponentsCountChanged</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>1</Value>
+        <Value>0</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>ModuleName_ADC</ItemSymbol>
@@ -22002,7 +22002,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>9600</Value>
+        <Value>115200</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -22016,7 +22016,7 @@
       <ItemState>
         <ItemSymbol>ActualBaudRate0</ItemSymbol>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>9603</Value>
+        <Value>115942</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -23933,7 +23933,7 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>1000000</Value>
+        <Value>10000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -23973,7 +23973,7 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>8000000</Value>
+        <Value>48000000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>
@@ -23989,8 +23989,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>LPSPI_SCK_ACTIVE_HIGH</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>LPSPI_SCK_ACTIVE_LOW</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>MasterDirection0</ItemSymbol>
@@ -24514,7 +24514,7 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>8000000</Value>
+        <Value>48000000</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

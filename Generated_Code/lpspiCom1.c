@@ -7,7 +7,7 @@
 **     Version     : Component 1.0.0, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2026-03-20, 15:36, # CodeGen: 0
+**     Date/Time   : 2026-03-26, 09:15, # CodeGen: 20
 **
 **     Copyright 1997 - 2015 Freescale Semiconductor, Inc. 
 **     Copyright 2016-2017 NXP 
@@ -57,7 +57,7 @@ const lpspi_master_config_t lpspiCom1_MasterConfig0 = {
   .pcsPolarity = LPSPI_ACTIVE_LOW,
   .isPcsContinuous = false,
   .bitcount = 16U,
-  .lpspiSrcClk = 8000000U,
+  .lpspiSrcClk = 48000000U,
   .clkPhase = LPSPI_CLOCK_PHASE_1ST_EDGE,
   .clkPolarity = LPSPI_SCK_ACTIVE_HIGH,
   .lsbFirst = false,
