@@ -1,18 +1,21 @@
 #ifndef __MYCAN_H_
 #define __MYCAN_H_
 
+// #define USE_CAN 0
+
+//#if USE_CAN
 #include "Cpu.h"
 #include "USERINIT.h"
 #include "can_pal1.h"
 #include "can_pal.h"
 extern volatile bool rxComplete;
-extern can_message_t rxMsg;      // ÊÕµ½µÄ¶«Î÷
+extern can_message_t rxMsg;      // ï¿½Õµï¿½ï¿½Ä¶ï¿½ï¿½ï¿½
 
-/* º¯ÊýÉùÃ÷ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 void APP_CAN_Init(void);
 // status_t APP_CAN_Send(uint32_t id, const uint8_t *data, uint8_t len);
 void APP_CAN_Send(uint32_t id, const uint8_t *data, uint8_t len);
-/* ÉùÃ÷ S32DS Éú³ÉµÄÊµÀý£¬¹© MYCAN.c Ê¹ÓÃ */
+/* ï¿½ï¿½ï¿½ï¿½ S32DS ï¿½ï¿½ï¿½Éµï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ MYCAN.c Ê¹ï¿½ï¿½ */
 void APP_CAN_LoopbackTest(void);
 #define RX_MAILBOX  0UL
 #define TX_MAILBOX  1UL

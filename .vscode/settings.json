@@ -23,7 +23,9 @@
         "key.h": "c",
         "liuyunlpspi2.h": "c",
         "liuyunad7689.h": "c",
-        "lpspicom2.h": "c"
+        "lpspicom2.h": "c",
+        "edma_driver.h": "c",
+        "MYCAN.H": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

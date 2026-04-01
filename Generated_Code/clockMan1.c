@@ -7,7 +7,7 @@
 **     Version     : Component SDK_S32K1xx_15, Driver 01.00, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2026-03-26, 09:15, # CodeGen: 20
+**     Date/Time   : 2026-04-02, 07:14, # CodeGen: 36
 **
 **     Copyright 1997 - 2015 Freescale Semiconductor, Inc. 
 **     Copyright 2016-2017 NXP 
@@ -107,21 +107,21 @@ peripheral_clock_config_t peripheralClockConfig0[NUM_OF_PERIPHERAL_CLOCKS_0] = {
     {
         .clockName        = LPSPI0_CLK,
         .clkGate          = true,
-        .clkSrc           = CLK_SRC_FIRC_DIV2,
+        .clkSrc           = CLK_SRC_SIRC_DIV2,
         .frac             = MULTIPLY_BY_ONE,
         .divider          = DIVIDE_BY_ONE,
     },
     {
         .clockName        = LPSPI1_CLK,
         .clkGate          = true,
-        .clkSrc           = CLK_SRC_FIRC_DIV2,
+        .clkSrc           = CLK_SRC_SIRC_DIV2,
         .frac             = MULTIPLY_BY_ONE,
         .divider          = DIVIDE_BY_ONE,
     },
     {
         .clockName        = LPSPI2_CLK,
         .clkGate          = true,
-        .clkSrc           = CLK_SRC_FIRC_DIV2,
+        .clkSrc           = CLK_SRC_SIRC_DIV2,
         .frac             = MULTIPLY_BY_ONE,
         .divider          = DIVIDE_BY_ONE,
     },
@@ -223,32 +223,11 @@ clock_manager_user_config_t clockMan1_InitConfig0 = {
         },
         .soscConfig =
         {
-            .initialize       = true,                                          /*!< Initialize */
-            .freq             = 8000000U,                                      /*!< Frequency  */
-            /* SOSCCSR */
-            .monitorMode      = SCG_SOSC_MONITOR_DISABLE,                      /*!< SOSCCM      */
-            .locked           = false,                                         /*!< LK          */
-            /* SOSCCFG */
-            .extRef           = SCG_SOSC_REF_OSC,                              /*!< EREFS       */
-            .gain             = SCG_SOSC_GAIN_LOW,                             /*!< HGO         */
-            .range            = SCG_SOSC_RANGE_HIGH,                           /*!< RANGE       */
-            /* SOSCDIV */
-            .div1             = SCG_ASYNC_CLOCK_DIV_BY_1,                      /*!< SOSCDIV1    */
-            .div2             = SCG_ASYNC_CLOCK_DIV_BY_1,                      /*!< SOSCDIV2    */
+            .initialize       = false,                                         /*!< Do not initialize*/
         },
         .spllConfig =
         {
-            .initialize       = true,                                          /*!< Initialize */
-            /* SPLLCSR */
-            .monitorMode      = SCG_SPLL_MONITOR_DISABLE,                      /*!< SPLLCM     */
-            .locked           = false,                                         /*!< LK         */
-            /* SPLLCFG */
-            .prediv           = (uint8_t)SCG_SPLL_CLOCK_PREDIV_BY_1,           /*!< PREDIV     */
-            .mult             = (uint8_t)SCG_SPLL_CLOCK_MULTIPLY_BY_28,        /*!< MULT       */
-            .src              = 0U,                                            /*!< SOURCE     */
-            /* SPLLDIV */
-            .div1             = SCG_ASYNC_CLOCK_DIV_BY_1,                      /*!< SPLLDIV1   */
-            .div2             = SCG_ASYNC_CLOCK_DIV_BY_1,                      /*!< SPLLDIV2   */
+            .initialize       = false,                                         /*!< Do not initialize*/
         },
         .clockOutConfig =
         {
@@ -274,7 +253,7 @@ clock_manager_user_config_t clockMan1_InitConfig0 = {
             },
             .hccrConfig =              /*!< HCCR - HSRUN Clock Control Register        */
             {
-                .src          = SCG_SYSTEM_CLOCK_SRC_SYS_PLL,                  /*!< SCS        */
+                .src          = SCG_SYSTEM_CLOCK_SRC_FIRC,                     /*!< SCS        */
                 .divCore      = SCG_SYSTEM_CLOCK_DIV_BY_1,                     /*!< DIVCORE    */
                 .divBus       = SCG_SYSTEM_CLOCK_DIV_BY_2,                     /*!< DIVBUS     */
                 .divSlow      = SCG_SYSTEM_CLOCK_DIV_BY_4,                     /*!< DIVSLOW    */

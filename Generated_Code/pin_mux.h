@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 1.4, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2026-03-26, 09:15, # CodeGen: 20
+**     Date/Time   : 2026-04-02, 07:13, # CodeGen: 35
 **     Abstract    :
 **
 **     Settings    :
@@ -449,8 +449,8 @@
 **                  Direction                              : <Automatic>
 **                Custom name                              : PTC
 **                PTC                                      : 
-**                  Pin 0                                  : <Automatic>
-**                  Direction                              : <Automatic>
+**                  Pin 0                                  : PTC0
+**                  Direction                              : Output
 **                  Pin 1                                  : <Automatic>
 **                  Direction                              : <Automatic>
 **                  Pin 2                                  : <Automatic>

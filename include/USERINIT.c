@@ -14,6 +14,11 @@
 void USERINIT(void)
 {
 
+	WDOG->CNT = 0xD928C520;     // Unlock WDOG
+	(void)WDOG->CNT;            // Dummy read to complete unlock
+	WDOG->CS = 0x00002120;      // Disable WDOG: CMD32EN=1, CLK=LPO, EN=0, UPDATE=1
+	WDOG->TOVAL = 0xFFFF;       // Set timeout value
+
     CLOCK_SYS_Init(g_clockManConfigsArr, CLOCK_MANAGER_CONFIG_CNT,
                    g_clockManCallbacksArr, CLOCK_MANAGER_CALLBACK_CNT);
     CLOCK_SYS_UpdateConfiguration(0U, CLOCK_MANAGER_POLICY_AGREEMENT);
@@ -23,8 +28,9 @@ void USERINIT(void)
 
     // LED
     LED1_ON();
-    LED2_OFF();
-    LED1_FLAG=0;
+    LED2_ON();
+//    LED2_OFF();
+//    LED1_FLAG=0;
 
     //IQR
     INT_SYS_EnableIRQGlobal();

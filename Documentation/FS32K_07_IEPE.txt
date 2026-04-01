@@ -57,24 +57,6 @@ Module "pin_mux"   (component PinSettings)
    - pin_mux_PINS_DRV_ReadPins -This function returns the current input values from a port. Only pins configured as input will 
                 have meaningful values
 
-Module "can_pal1"  (component can_pal)
-   - can_pal1_CAN_Init -Initializes the CAN module.
-   - can_pal1_CAN_Deinit -De-initializes the CAN module.
-   - can_pal1_CAN_SetBitrate -Configures the CAN bitrate.
-   - can_pal1_CAN_GetBitrate -Returns the CAN bitrate.
-   - can_pal1_CAN_ConfigTxBuff -Configures a buffer for transmission.
-   - can_pal1_CAN_ConfigRemoteResponseBuff -Configures a transmit message buffer for remote frame response.
-   - can_pal1_CAN_ConfigRxBuff -Configures a buffer for reception.
-   - can_pal1_CAN_Send -Sends a CAN frame using the specified buffer.
-   - can_pal1_CAN_SendBlocking -Sends a CAN frame using the specified buffer, in a blocking manner.
-   - can_pal1_CAN_Receive -Receives a CAN frame using the specified message buffer.
-   - can_pal1_CAN_ReceiveBlocking -Receives a CAN frame using the specified buffer, in a blocking manner.
-   - can_pal1_CAN_AbortTransfer -Ends a non-blocking CAN transfer early.
-   - can_pal1_CAN_SetRxFilter -Configures an ID filter for a specific reception buffer.
-   - can_pal1_CAN_GetTransferStatus -Returns the state of the previous CAN transfer.
-   - can_pal1_CAN_InstallEventCallback -Installs a callback function for the IRQ handler.
-   - can_pal1_CAN_GetDefaultConfig -Returns the default values for the CAN module.
-
 Module "uart_pal1" (component uart_pal)
    - uart_pal1_UART_GetDefaultConfig -Gets the default configuration structure.
    - uart_pal1_UART_Init -Initializes the uart module.
@@ -221,6 +203,24 @@ Module "lpspiCom1" (component lpspi)
    - lpspiCom1_LPSPI_DRV_SlaveTransfer -Starts the transfer data on LPSPI bus using a non-blocking call.
    - lpspiCom1_LPSPI_DRV_SlaveAbortTransfer -Aborts the transfer that started by a non-blocking call transfer function.
    - lpspiCom1_LPSPI_DRV_SlaveGetTransferStatus -Returns whether the previous transfer is finished.
+
+Module "can_pal1"  (component can_pal)
+   - can_pal1_CAN_Init -Initializes the CAN module.
+   - can_pal1_CAN_Deinit -De-initializes the CAN module.
+   - can_pal1_CAN_SetBitrate -Configures the CAN bitrate.
+   - can_pal1_CAN_GetBitrate -Returns the CAN bitrate.
+   - can_pal1_CAN_ConfigTxBuff -Configures a buffer for transmission.
+   - can_pal1_CAN_ConfigRemoteResponseBuff -Configures a transmit message buffer for remote frame response.
+   - can_pal1_CAN_ConfigRxBuff -Configures a buffer for reception.
+   - can_pal1_CAN_Send -Sends a CAN frame using the specified buffer.
+   - can_pal1_CAN_SendBlocking -Sends a CAN frame using the specified buffer, in a blocking manner.
+   - can_pal1_CAN_Receive -Receives a CAN frame using the specified message buffer.
+   - can_pal1_CAN_ReceiveBlocking -Receives a CAN frame using the specified buffer, in a blocking manner.
+   - can_pal1_CAN_AbortTransfer -Ends a non-blocking CAN transfer early.
+   - can_pal1_CAN_SetRxFilter -Configures an ID filter for a specific reception buffer.
+   - can_pal1_CAN_GetTransferStatus -Returns the state of the previous CAN transfer.
+   - can_pal1_CAN_InstallEventCallback -Installs a callback function for the IRQ handler.
+   - can_pal1_CAN_GetDefaultConfig -Returns the default values for the CAN module.
 
 Module "Cpu"       (component S32K148_144)
    - Cpu_SystemInit -This function disables the watchdog, enables FPU and the power mode protection. SystemInit is called from 

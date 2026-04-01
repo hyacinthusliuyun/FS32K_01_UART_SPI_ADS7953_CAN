@@ -286,142 +286,34 @@ void ADS7953_Scan_channel(uint8_t ch)
 #endif
 }
 
-/* 单帧测试：每帧命令后等待片刻，看 ADS7953 是否能进入 Manual Mode
- *
- * 测试思路：
- * 1. 先发 RESET 命令让 ADS7953 进入已知状态
- * 2. 再发 MANUAL 命令，看 tag 是否变为 1
- *
- * 只发一帧命令，中间隔一段时间，确保 ADS7953 有时间处理
+/* 测试：字节反转命令
+ * 正常: 0x1C60 (MSB在前)
+ * 反转: 0x601C (LSB在前)
  */
 void ADS7953_TestSingleFrame(void)
 {
-    uint16_t cmd;
-    uint8_t tx[2];
+    uint8_t tx_normal[2] = {0x1C, 0x60};
+    uint8_t tx_reversed[2] = {0x60, 0x1C};
     uint8_t rx[2] = {0};
     volatile uint32_t delay;
 
-    /* 测试0: 发送 RESET 命令 (0x1C60)，让 ADS7953 进入 Manual 模式
-     * 根据 datasheet，RESET_CHAN 位可重置通道计数器，使能编程 */
-    cmd = 0x1C60U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
+    /* 先测试正常命令 */
+    MLY_UART1_SEND("=== 正常 0x1C60 ===\r\n");
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx_normal, rx, 2U, 200U);
+        MLY_UART1_SEND("rx=%02X%02X tag=%u\r\n", rx[0], rx[1], (rx[0]>>4)&0x0F);
+        for (delay = 20000U; delay--; ) { }
+    }
 
-    /* 延时一段时间，让 ADS7953 处理 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 再发一帧同样的命令，看 tag 是否为 1 */
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T0 afterReset rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试1: 0x1860 - 标准 Manual 命令 (无 RESET) */
-    cmd = 0x1860U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T1 cmd=1860 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试2: 0x1C60 - 带 RESET_CHAN */
-    cmd = 0x1C60U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T2 cmd=1C60 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试3: 0x1800 - 无 ENABLE_PROG (手册说此位必须为1才能编程) */
-    cmd = 0x1800U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T3 cmd=1800 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试4: 0x9D60 - 最高位为1的命令 */
-    cmd = 0x9D60U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T4 cmd=9D60 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试5: 0xA000 - Auto-2 模式 (PWR_UP=0)
-     * [15:12]=1010=Auto2, [11]=0=ENABLE_PROG关闭, [5]=0=PWR_UP关闭 */
-    cmd = 0xA000U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T5 cmd=A000 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试6: 0xE000 - Auto-2 模式 (PWR_UP=1)
-     * [15:12]=1110=Auto2?, [11]=0=ENABLE_PROG关闭, [5]=1=PWR_UP开启 */
-    cmd = 0xE000U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T6 cmd=E000 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试7: 0x8000 - Auto-1 模式
-     * [15:12]=1000=Auto1, [11]=0, [5]=0 */
-    cmd = 0x8000U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T7 cmd=8000 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
-
-    /* 延时 */
-    for (delay = 0; delay < 10000U; delay++) { }
-
-    /* 测试8: 0xC000 - Auto-2 变体 (PWR_UP=0) */
-    cmd = 0xC000U;
-    tx[0] = (uint8_t)(cmd >> 8);
-    tx[1] = (uint8_t)(cmd & 0xFFU);
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    for (delay = 0; delay < 10000U; delay++) { }
-    (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx, rx, 2U, 200U);
-    MLY_UART1_SEND("T8 cmd=C000 rx=%02X%02X tag=%u\r\n",
-                   rx[0], rx[1], (unsigned)((rx[0] >> 4) & 0x0FU));
+    /* 再测试字节反转命令 */
+    MLY_UART1_SEND("\r\n=== 反转 0x601C ===\r\n");
+    for (uint8_t i = 0; i < 10; i++)
+    {
+        (void)LPSPI_DRV_MasterTransferBlocking(LPSPICOM2, tx_reversed, rx, 2U, 200U);
+        MLY_UART1_SEND("rx=%02X%02X tag=%u\r\n", rx[0], rx[1], (rx[0]>>4)&0x0F);
+        for (delay = 20000U; delay--; ) { }
+    }
 }
 
 /* 任务入口：当前固定走单通道扫描（CH13） */
