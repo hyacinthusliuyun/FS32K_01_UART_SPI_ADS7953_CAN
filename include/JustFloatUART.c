@@ -1,5 +1,6 @@
 #include "JustFloatUART.h"
 #include "USERINIT.h"
+#include <string.h>
 
 #define JFLOAT_CH_COUNT      16U
 #define JFLOAT_TAIL_SIZE     4U
@@ -7,10 +8,9 @@
 
 static const uint8_t kJustFloatTail[JFLOAT_TAIL_SIZE] = {0x00U, 0x00U, 0x80U, 0x7FU};
 
-//uart_pal1
 void JFLOAT_UART_SendBytes(const uint8_t *buf, uint16_t len)
 {
-    if ((buf == 0) || (len == 0U))
+    if ((buf == NULL) || (len == 0U))
     {
         return;
     }
@@ -18,12 +18,33 @@ void JFLOAT_UART_SendBytes(const uint8_t *buf, uint16_t len)
     (void)UART_SendDataBlocking(&uart_pal1_instance, (const uint8_t *)buf, len, TIMEOUT);
 }
 
+void JFLOAT_UART_SendFloatArray16(const float vals[16])
+{
+    uint8_t frame[JFLOAT_FRAME_SIZE] = {0};
+    uint16_t pos = 0U;
+
+    if (vals == NULL)
+    {
+        return;
+    }
+
+    for (uint8_t i = 0U; i < JFLOAT_CH_COUNT; ++i)
+    {
+        memcpy(&frame[pos], &vals[i], sizeof(float));
+        pos += sizeof(float);
+    }
+
+    memcpy(&frame[pos], kJustFloatTail, JFLOAT_TAIL_SIZE);
+
+    JFLOAT_UART_SendBytes(frame, JFLOAT_FRAME_SIZE);
+}
+
 void JFLOAT_UART_SendAds16RawAsFloat(const uint32_t raw[16], const uint8_t valid[16])
 {
     uint8_t frame[JFLOAT_FRAME_SIZE] = {0};
     uint16_t pos = 0U;
 
-    if ((raw == 0) || (valid == 0))
+    if ((raw == NULL) || (valid == NULL))
     {
         return;
     }

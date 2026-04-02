@@ -52,7 +52,7 @@
       <File Name="SDK/platform/drivers/src/lpuart/lpuart_hw_access.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214325" FileType="1048576" CompNumb="5" />
       <File Name="SDK/platform/drivers/inc/edma_driver.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214283" FileType="1048576" CompNumb="15" />
       <File Name="Generated_Code/lpspiCom2.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150218" FileType="45637" CompNumb="18" />
-      <File Name="Generated_Code/lpspiCom2.c" FileDate="2026-04-02, 02:56:32" FileAge="1775069792694" FileType="45637" CompNumb="18" />
+      <File Name="Generated_Code/lpspiCom2.c" FileDate="2026-04-02, 07:46:46" FileAge="1775087206419" FileType="45637" CompNumb="18" />
       <File Name="Generated_Code/lpspiCom1.h" FileDate="2026-03-22, 23:42:30" FileAge="1774194150218" FileType="45637" CompNumb="19" />
       <File Name="Generated_Code/lpspiCom1.c" FileDate="2026-04-02, 02:56:32" FileAge="1775069792698" FileType="45637" CompNumb="19" />
       <File Name="SDK/platform/devices/S32K148/include/S32K148.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214317" FileType="1048576" CompNumb="5" />
@@ -98,10 +98,10 @@
       <File Name="Documentation/FS32K_07_IEPE.txt" FileDate="2026-04-02, 07:13:28" FileAge="1775085208648" FileType="3072" />
       <File Name="SDK/platform/pal/inc/uart_pal_mapping.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214290" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/src/pins/pins_driver.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214262" FileType="1048576" CompNumb="8" />
-      <File Name="Generated_Code/pin_mux.h" FileDate="2026-04-02, 07:13:28" FileAge="1775085208596" FileType="45637" CompNumb="8" />
+      <File Name="Generated_Code/pin_mux.h" FileDate="2026-04-02, 07:43:27" FileAge="1775087007498" FileType="45637" CompNumb="8" />
       <File Name="SDK/platform/drivers/inc/lpspi_shared_function.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214301" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/inc/pins_driver.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214265" FileType="1048576" CompNumb="8" />
-      <File Name="Generated_Code/pin_mux.c" FileDate="2026-04-02, 07:13:28" FileAge="1775085208600" FileType="45637" CompNumb="8" />
+      <File Name="Generated_Code/pin_mux.c" FileDate="2026-04-02, 07:43:27" FileAge="1775087007502" FileType="45637" CompNumb="8" />
       <File Name="SDK/platform/drivers/inc/lpspi_master_driver.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214301" FileType="1048576" CompNumb="0" />
       <File Name="SDK/platform/drivers/src/clock/S32K1xx/scg_hw_access.h" FileDate="2026-03-20, 15:36:54" FileAge="1773992214255" FileType="1048576" CompNumb="7" />
       <File Name="Generated_Code/can_pal1.h" FileDate="2026-04-02, 07:13:28" FileAge="1775085208588" FileType="45637" CompNumb="20" />
@@ -113,5 +113,5 @@
       <File Name="SDK/platform/drivers/src/lpspi/lpspi_shared_function.c" FileDate="2026-03-20, 15:36:54" FileAge="1773992214297" FileType="1048576" CompNumb="0" />
     </GeneratedByPE>
   </GeneratedFilesList>
-  <CodeGenReference>38</CodeGenReference>
+  <CodeGenReference>43</CodeGenReference>
 </CodeGenerationInfo>

@@ -1,70 +1,33 @@
 #include "USERINIT.h"
 #include "MLYTASK.h"
-uint8_t test;
 
-uint8_t LED1_FLAG,LED2_FLAG;
-uint8_t KEY_VAL,KEY_OLD,KEY_DOWN,KEY_UP;
+extern uint32_t OSIF_GetMilliseconds(void);
 
-
-void LED_PROC(void);
-void KEY_PROC(void);
-void ADC_PROC(void);
 void ADS7953_PROC(void);
 
 void MLYTASK(void)
 {
-    // LED_PROC();
-    // KEY_PROC();
-    ADS7953_PROC();
-    // APP_CAN_LoopbackTest();
-}
+    static uint32_t last_adc_tick = 0U;
+    static uint32_t last_led_tick = 0U;
+    uint32_t now = OSIF_GetMilliseconds();
 
-void LED_PROC(void)
-{
-	if(LED1_FLAG==1)
-	{
-        LED1_ON();
-	}
-	else if(LED1_FLAG==2)
-	{
-        LED1_OFF();
-	}
-}
-void KEY_PROC(void)
-{
-    KEY_VAL=KEY_READ();
-    KEY_DOWN=KEY_VAL&(KEY_VAL^KEY_OLD);
-    KEY_UP=~KEY_VAL&(KEY_VAL^KEY_OLD);
-    KEY_OLD=KEY_VAL;
-        switch (KEY_VAL)
-        {
-            case 1:
-            	MLY_UART1_SEND("INFO: KEY 1 OK && LED1_ON\r\n");
-                LED1_FLAG=1;
-                test=1;
-                break;
-            case 2:
-            	MLY_UART1_SEND("INFO: KEY 2 && LED1_OF OK\r\n");
-            	LED1_FLAG=2;
-            	test=2;
+    /* ADC scan every 20ms (50Hz) */
+    if ((now - last_adc_tick) >= 20U)
+    {
+        last_adc_tick = now;
+        ADS7953_PROC();
+    }
 
-                break;
-        }
-    // }
-}
-void ADC_PROC(void)
-{
-    float ADC_VAL;
-    ADC_VAL=ADC0_CH16_READ();
-    MLY_UART1_SEND("%f\r\n",ADC_VAL);
-
-
-
+    /* LED toggle every 500ms */
+    if ((now - last_led_tick) >= 500U)
+    {
+        last_led_tick = now;
+        LED1_TOGGLE();
+    }
 }
 
 void ADS7953_PROC(void)
 {
-    /* 临时替换为单帧测试，诊断SPI通信 */
-    ADS7953_TestSingleFrame();
-    /* ADS7953_Scan(); */
+    /* 调用完整扫描（参考例程） */
+    ADS7953_Scan();
 }

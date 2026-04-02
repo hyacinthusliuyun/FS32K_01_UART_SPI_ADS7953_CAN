@@ -3,17 +3,8 @@
 
 #include <stdint.h>
 
-extern uint32_t ADS7953_GetValueOrig[16];
-extern uint8_t ADS7953_DataValid[16];
-extern uint32_t ADS7953_SpiErrCnt;
-extern uint32_t ADS7953_SpiOkCnt;
-extern uint32_t ADS7953_TagErrCnt;
-
 void ADS7953_Scan(void);
 void ADS7953_Scan_channel(uint8_t ch);
 void ADS7953_ScanAll_Manual(void);
-void ADS7953_CheckChannel(uint8_t ch);
-uint16_t ADS7953_GetValidBitmap(void);
-void ADS7953_TestSingleFrame(void);
 
 #endif

@@ -3,7 +3,7 @@
   <Header>
     <Name>FS32K_07_IEPE</Name>
     <SavedBy>Administrator</SavedBy>
-    <ModificationStamp>63</ModificationStamp>
+    <ModificationStamp>67</ModificationStamp>
     <Date>2025-11-27</Date>
     <IDE>Eclipse IDE</IDE>
     <PEversion>1.12.2.RT7_b1743-0713</PEversion>
@@ -10173,14 +10173,14 @@
         <ItemSymbol>PTE_port_10</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>PTE10</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
         <ItemSymbol>PTE_port_10_Dir</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>&lt;Automatic&gt;</Value>
+        <Value>Output</Value>
       </ItemState>
       <ItemState>
         <ItemSymbol>PTE_port_11</ItemSymbol>
@@ -10756,7 +10756,7 @@
         <ItemSymbol>LPSPI2_lpspi_pcs_1</ItemSymbol>
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
-        <Value>PTE10</Value>
+        <Value>&lt;Automatic&gt;</Value>
         <SharedPrphMode>false</SharedPrphMode>
       </ItemState>
       <ItemState>
@@ -23503,8 +23503,8 @@
         <ReadOnly>false</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Index>0</Index>
-        <EnumSymbVal>LPSPI_SCK_ACTIVE_HIGH</EnumSymbVal>
+        <Index>1</Index>
+        <EnumSymbVal>LPSPI_SCK_ACTIVE_LOW</EnumSymbVal>
       </ItemState>
       <ItemState>
         <ItemSymbol>MasterDirection0</ItemSymbol>
@@ -24673,7 +24673,7 @@
         <ReadOnly>true</ReadOnly>
         <UserReadOnly>false</UserReadOnly>
         <PropertyModelIsAutomatic>false</PropertyModelIsAutomatic>
-        <Value>2</Value>
+        <Value>5</Value>
         <Base>DEC</Base>
       </ItemState>
       <ItemState>

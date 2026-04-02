@@ -7,6 +7,7 @@
 #define ADS7953_TX_USE_JUSTFLOAT 1U
 
 void JFLOAT_UART_SendBytes(const uint8_t *buf, uint16_t len);
+void JFLOAT_UART_SendFloatArray16(const float vals[16]);
 void JFLOAT_UART_SendAds16RawAsFloat(const uint32_t raw[16], const uint8_t valid[16]);
 
 #endif

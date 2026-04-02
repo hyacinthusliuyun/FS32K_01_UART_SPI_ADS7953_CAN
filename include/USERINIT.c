@@ -1,6 +1,6 @@
     #include "USERINIT.h"
     //utf-8
-  
+
     uint8_t RX0BUFFER[256];
     uint16_t task_timer;
     uint8_t txData[8] = {0x11,0x22,0x33,0x44,0x55,0x66,0x77,0x88};
@@ -41,10 +41,10 @@ void USERINIT(void)
     UART_ReceiveData(&uart_pal1_instance, RX0BUFFER, 256);
     // MLY_UART1_SEND("MLY_DEBUG_ADC INIT TX OK\r\n");
 
-    //CAN
-    APP_CAN_Init();
-    MLY_UART1_SEND("MLY_DEBUG_CAN INIT\r\n");
-    APP_CAN_Send(0x123, txData, 8);   //CAN_SEND
+    //CAN (暂时禁用 - MYCAN.c已删除)
+    //APP_CAN_Init();
+    //MLY_UART1_SEND("MLY_DEBUG_CAN INIT\r\n");
+    //APP_CAN_Send(0x123, txData, 8);   //CAN_SEND
 
     //SPI
     status_t spiStatus;
@@ -68,7 +68,7 @@ void USERINIT(void)
     PINS_DRV_WritePin(PTA, 9U, 1); //TEST
     OSIF_TimeDelay(1);
 
-    
+
 }
 
 void MLY_UART1_SEND(const char *fmt, ...)

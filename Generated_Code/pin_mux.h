@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 1.4, CPU db: 3.00.000
 **     Repository  : SDK_S32K1xx_15
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2026-04-02, 07:13, # CodeGen: 35
+**     Date/Time   : 2026-04-02, 07:43, # CodeGen: 41
 **     Abstract    :
 **
 **     Settings    :
@@ -577,8 +577,8 @@
 **                  Direction                              : <Automatic>
 **                  Pin 9                                  : <Automatic>
 **                  Direction                              : <Automatic>
-**                  Pin 10                                 : <Automatic>
-**                  Direction                              : <Automatic>
+**                  Pin 10                                 : PTE10
+**                  Direction                              : Output
 **                  Pin 11                                 : <Automatic>
 **                  Direction                              : <Automatic>
 **                  Pin 12                                 : <Automatic>
@@ -667,7 +667,7 @@
 **                LPSPI2                                   : 
 **                  Peripheral Chip Select 0               : <Automatic>
 **                  Direction                              : <Automatic>
-**                  Peripheral Chip Select 1               : PTE10
+**                  Peripheral Chip Select 1               : <Automatic>
 **                  Direction                              : Output
 **                  Peripheral Chip Select 2               : <Automatic>
 **                  Direction                              : <Automatic>
